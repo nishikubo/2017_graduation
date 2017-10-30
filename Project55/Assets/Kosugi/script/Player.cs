@@ -28,13 +28,23 @@ public class Player : MonoBehaviour
     [SerializeField, Header("移動量")]
     private Vector3 mInputVec = Vector3.zero;
 
-    [SerializeField, Header("当たり判定用のレイの長さ")]
-    private float mWallRayLength = 0.2f;
+    [SerializeField, Header("壁判定用のレイの長さ")]
+    private float mWallRayLength = 1.0f;
+    [SerializeField, Header("床判定用のレイの長さ")]
+    private float mFloorRayLength = 0.2f;
     [SerializeField, Header("ジャンプ用の加える力")]
     private float mJumpPower = 300f;
 
     [SerializeField, Header("衝突し続けているか")]
     private bool mColContinues = false;
+
+    /*
+    使うキャラによってはあたり判定を両足に持たせるかも
+    [SerializeField, Header("床判定_左足")]
+    private bool mLfoot = false;
+    [SerializeField, Header("床判定_右足")]
+    private bool mRfoot = false;
+    */
 
     // Use this for initialization
     void Start()
@@ -114,9 +124,14 @@ public class Player : MonoBehaviour
         //当たり判定を処理するレイヤーを指定
         int layermask = (1 << LayerMask.NameToLayer("Floor"));
 
-        mRayInfo.isHit = Physics.Raycast(mRayDown, out mRayCast, mWallRayLength, layermask, QueryTriggerInteraction.Ignore);
+        mRayInfo.isHit = Physics.Raycast(mRayDown, out mRayCast, mFloorRayLength, layermask, QueryTriggerInteraction.Ignore);
 
-        Debug.DrawRay(transform.position, -transform.up, Color.red, 0.1f, false);
+        if (mRayInfo.isHit)
+        {
+            print("hit");
+        }
+
+        Debug.DrawRay(transform.position, -transform.up*0.2f, Color.red, 0.1f, false);
     }
 
     private void OnCollisionStay(Collision col)
