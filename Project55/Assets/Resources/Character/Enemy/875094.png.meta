@@ -1,0 +1,204 @@
+fileFormatVersion: 2
+guid: 96c018fefcd5ffb4aaa9995eb9d2a326
+timeCreated: 1508822312
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: 875094_0
+    21300002: 875094_1
+    21300004: 875094_2
+    21300006: 875094_3
+    21300008: 875094_4
+    21300010: 875094_5
+    21300012: 875094_6
+    21300014: 875094_7
+    21300016: 875094_8
+    21300018: 875094_9
+    21300020: 875094_10
+    21300022: 875094_11
+    21300024: 875094_12
+    21300026: 875094_13
+    21300028: 875094_14
+    21300030: 875094_15
+    21300032: 875094_16
+    21300034: 875094_17
+    21300036: 875094_18
+    21300038: 875094_19
+    21300040: 875094_20
+    21300042: 875094_21
+    21300044: 875094_22
+    21300046: 875094_23
+    21300048: 875094_24
+    21300050: 875094_25
+    21300052: 875094_26
+    21300054: 875094_27
+    21300056: 875094_28
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 250
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 875094_4
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 702
+        width: 491
+        height: 477
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 875094_5
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 622
+        width: 388
+        height: 436
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 875094_7
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 470
+        width: 390
+        height: 441
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 875094_13
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 74
+        width: 387
+        height: 385
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 875094_14
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 64
+        width: 350
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 875094_20
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 186
+        width: 72
+        height: 77
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 875094_28
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 25
+        width: 208
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
