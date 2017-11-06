@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum EnemyType
+{
+    None,
+    Physics,    //通常　徘徊タイプ（物理）
+    Magic,      //魔法  位置固定タイプ（遠隔）
+    Herd,       //群れタイプ
+    ItemDrop    //回復アイテムを落とすタイプ
+}
+
+
 public enum EnemyState
 {
     None,   
