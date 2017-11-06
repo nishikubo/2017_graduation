@@ -11,32 +11,26 @@ struct RayHitInfo
     //当たったか？
     public bool isHit;
 };
-/// <summary>
-/// 左右どちらを向いているかの判定用
-/// </summary>
-public enum Direction
-{
-    LEFT,
-    RIGHT
-};
+
 public class Player : MonoBehaviour
 {
     //SerializeField TooltipAttribute Header
 
     [SerializeField, Header("移動速度")]
-    private float mSpeed = 2.0f;
+    private float mSpeed = 5.0f;
     [SerializeField, Header("移動量")]
     private Vector3 mInputVec = Vector3.zero;
 
-    [SerializeField, Header("当たり判定用のレイの長さ")]
-    private float mWallRayLength = 0.2f;
+    //[SerializeField, Header("壁判定用のレイの長さ")]
+    private float mRayLengthWall = 1.0f;
+    //[SerializeField, Header("床判定用のレイの長さ")]
+    private float mRayLengthFloor = 0.2f;
     [SerializeField, Header("ジャンプ用の加える力")]
-    private float mJumpPower = 300f;
+    private float mJumpPower = 250f;
 
     [SerializeField, Header("衝突し続けているか")]
-    private bool mColContinues = false;
+    private bool mColFloor = false;
 
-    // Use this for initialization
     void Start()
     {
 
@@ -48,8 +42,9 @@ public class Player : MonoBehaviour
         Move();
         Jump();
 
-        WallRay();
-        FloorRay();
+        //WallRay();
+        //FloorRay();
+
         //print();
     }
 
@@ -60,10 +55,7 @@ public class Player : MonoBehaviour
     {
         mInputVec = new Vector3(Input.GetAxis("Horizontal") * mSpeed, 0, Input.GetAxis("Vertical") * mSpeed);
 
-        if (!mColContinues)
-        {
-            transform.position += mInputVec * Time.deltaTime;
-        }
+        transform.position += mInputVec * Time.deltaTime;
     }
 
     /// <summary>
@@ -71,13 +63,14 @@ public class Player : MonoBehaviour
     /// </summary>
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (mColFloor && Input.GetKeyDown(KeyCode.Space))
         {
             GetComponent<Rigidbody>().AddForce(Vector2.up * mJumpPower);
         }
     }
 
     /// <summary>
+    /// 2Dメインで制作するので使わない予定
     /// Rayでの壁判定処理
     /// </summary>
     private void WallRay()
@@ -89,20 +82,21 @@ public class Player : MonoBehaviour
         //当たり判定を処理するレイヤーを指定
         int layermask = (1 << LayerMask.NameToLayer("Floor"));
 
-        mRayInfo.isHit = Physics.Raycast(mRayFront, out mRayCast, mWallRayLength, layermask, QueryTriggerInteraction.Ignore);
+        mRayInfo.isHit = Physics.Raycast(mRayFront, out mRayCast, mRayLengthWall, layermask, QueryTriggerInteraction.Ignore);
 
         if (mRayInfo.isHit)
         {
-            mColContinues = true;
+
         }
         else
         {
-            mColContinues = false;
+
         }
 
-        Debug.DrawRay(transform.position, mInputVec.normalized, Color.grey, 0.1f, false);
+        Debug.DrawRay(transform.position, mInputVec.normalized * mRayLengthWall, Color.grey, 0.1f, false);
     }
     /// <summary>
+    /// 2Dメインで制作するので使わない予定
     /// Rayでの床判定処理
     /// </summary>
     void FloorRay()
@@ -114,17 +108,28 @@ public class Player : MonoBehaviour
         //当たり判定を処理するレイヤーを指定
         int layermask = (1 << LayerMask.NameToLayer("Floor"));
 
-        mRayInfo.isHit = Physics.Raycast(mRayDown, out mRayCast, mWallRayLength, layermask, QueryTriggerInteraction.Ignore);
+        mRayInfo.isHit = Physics.Raycast(mRayDown, out mRayCast, mRayLengthFloor, layermask, QueryTriggerInteraction.Ignore);
 
-        Debug.DrawRay(transform.position, -transform.up, Color.red, 0.1f, false);
+        if (mRayInfo.isHit)
+        {
+           
+        }
+
+        Debug.DrawRay(transform.position, -transform.up * mRayLengthFloor, Color.red, 0.1f, false);
     }
 
-    private void OnCollisionStay(Collision col)
+    private void OnCollisionStay2D(Collision2D col)
     {
-
+        if(col.gameObject.tag=="Floor")
+        {
+            mColFloor = true;
+        }
     }
-    private void OnCollisionExit(Collision col)
+    private void OnCollisionExit2D(Collision2D col)
     {
-
+        if (col.gameObject.tag == "Floor")
+        {
+            mColFloor = false;
+        }
     }
 }
