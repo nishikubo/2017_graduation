@@ -2,24 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum State
-{
-    Default,
-    Normal,
-    Weapon,
-    Pause,
-    Clear,
-    Death
-}
+//状態ごとにスクリプトを起動するよう書く
 public class StateManager : MonoBehaviour {
 
-    private State mBeforeState;
-    private State mNowState;
+    private States mBeforeState;
+    private States mNewState;
 
     void Start()
     {
-        mBeforeState = State.Default;
-        mNowState = State.Normal;
+        mBeforeState = States.None;
+        mNewState = States.Normal;
     }
 
     void Update()
@@ -27,17 +19,24 @@ public class StateManager : MonoBehaviour {
 
     }
 
-    public void SetState(State state)
+    public void SetState(States state)
     {
-        mBeforeState = mNowState;
-        mNowState = state;
-        if (mBeforeState == mNowState) return;
+        mBeforeState = mNewState;
+        mNewState = state;
+        if (mBeforeState == mNewState) return;
 
-        print(mNowState);
+        if (mNewState == States.Normal)
+        {
+            Time.timeScale = 1;
+        }
+        else if (mNewState == States.Weapon)
+        {
+            Time.timeScale = 0;
+        }
     }
 
-    public State GetMode()
+    public States GetState()
     {
-        return mNowState;
+        return mNewState;
     }
 }

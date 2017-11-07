@@ -6,7 +6,7 @@ public class debugweapon : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Weapon _weapon = Scene.getWeapon();
+        WeaponsList _weapon = Scene.StartWeapon();
         Debug.Log(_weapon);
 	}
 	
