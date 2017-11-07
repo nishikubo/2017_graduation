@@ -18,24 +18,34 @@ public enum SceneType
 
 public enum Weapon
 {
-    None,
-    Sword,
-    Gun,
-    Fist,
-    Cane
+    NONE,
+    SWORD,
+    GUN,
+    FIST,
+    CANE
 }
-
 
 
 public class Scene : MonoBehaviour {
 
     [SerializeField,Tooltip("飛ぶシーン選択")]
-    private SceneType _currentScene = SceneType.Title;
+    private SceneType m_currentScene = SceneType.Title;
     //https://gametukurikata.com/program/data シーン遷移参考にして
 
-    [SerializeField]
-    private Weapon _weapon = Weapon.None;
-    public static Weapon _weaponCheck;
+    [SerializeField,Tooltip("対象武器選択(使わないときはNone)")]
+    private Weapon m_weapon = Weapon.NONE;
+    public static Weapon m_weaponCheck;  //保持
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        switch(m_currentScene)
+        {
+            case SceneType.StageSelect: NextStage(); BeforeStage(); break;
+            default: break;
+        }
+    }
 
 
     /// <summary>
@@ -43,7 +53,7 @@ public class Scene : MonoBehaviour {
     /// </summary>
     public void OnNext()
     {
-        SceneNavigator.Instance.Change(_currentScene.ToString(), 1.5f);
+        SceneNavigator.Instance.Change(m_currentScene.ToString(), 1.5f);
     }
 
     /// <summary>
@@ -54,19 +64,48 @@ public class Scene : MonoBehaviour {
         Application.Quit();
     }
 
+    /// <summary>
+    /// 武器選択
+    /// </summary>
+    /// <param name="weapon"></param>
     public void OnWeapon(string weapon)
     {
         
-        _weaponCheck = _weapon;
-        weapon = _weaponCheck.ToString();
+        m_weaponCheck = m_weapon;
+        weapon = m_weaponCheck.ToString();
         Debug.Log(weapon);
-        SceneNavigator.Instance.Change(_currentScene.ToString(), 1.5f);
+        SceneNavigator.Instance.Change(m_currentScene.ToString(), 1.5f);
 
     }
 
-    public static Weapon getWeapon()
+    /// <summary>
+    /// 武器保持
+    /// </summary>
+    /// <returns></returns>
+    public static Weapon GetWeapon()
     {
-        return _weaponCheck;
+        return m_weaponCheck;
     }
 
+    /// <summary>
+    /// 次のステージ選択
+    /// </summary>
+    public void NextStage()
+    {
+        if(Input.GetButtonDown("Right"))
+        {
+            Debug.Log("right");
+        }
+    }
+
+    /// <summary>
+    /// 前のステージ選択
+    /// </summary>
+    public void BeforeStage()
+    {
+        if (Input.GetButtonDown("Left"))
+        {
+            Debug.Log("reft");
+        }
+    }
 }

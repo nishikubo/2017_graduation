@@ -5,44 +5,44 @@ using UnityEngine;
 public class EnemyStatus : MonoBehaviour {
 
     [SerializeField, Tooltip("攻撃力")]
-    private int _attack = 10;   //攻撃力
+    private int m_attack = 10;   //攻撃力
     [SerializeField, Tooltip("防御力")]
-    private int _defence = 5;   //防御力
+    private int m_defence = 5;   //防御力
     [SerializeField, Tooltip("体力")]
-    private int _hp = 100;      //体力
-    private int _maxHp = 0;     //体力最大値
+    private int m_hp = 100;      //体力
+    private int m_maxHp = 0;     //体力最大値
 
     private void Start()
     {
-        _maxHp = GetHp();
+        m_maxHp = GetHp();
     }
 
-    public void SetAttack(int attack) { _attack = attack; }
-    public void SetDefence(int defence) { _defence = defence; }
-    public void SetHp(int hp) { _hp = hp; }
+    public void SetAttack(int attack) { m_attack = attack; }
+    public void SetDefence(int defence) { m_defence = defence; }
+    public void SetHp(int hp) { m_hp = hp; }
 
     /// <summary>
     /// 攻撃力
     /// </summary>
     /// <returns>現在の攻撃力を返す</returns>
-    public int GetAttack() { return _attack; }
+    public int GetAttack() { return m_attack; }
     /// <summary>
     /// 防御力
     /// </summary>
     /// <returns>現在の防御力を返す</returns>
-    public int GetDefence() { return _defence; }
+    public int GetDefence() { return m_defence; }
     /// <summary>
     /// 体力
     /// </summary>
     /// <returns>現在の体力を返す</returns>
-    public int GetHp() { return _hp; }
+    public int GetHp() { return m_hp; }
 
 
     /// <summary>
     /// 通常攻撃
     /// </summary>
     /// <returns>(Enemy_AT)</returns>
-    public int attack()
+    public int Attack()
     {
         return GetAttack();
     }
@@ -52,9 +52,9 @@ public class EnemyStatus : MonoBehaviour {
     /// 通常で攻撃を受けた
     /// </summary>
     /// <param name="damage">相手のステータス</param>
-    public void damage(int damage)
+    public void Damage(int damage)
     {
-        _hp = (int)(Mathf.Max(0, _hp - (damage - GetDefence())));
+        m_hp = (int)(Mathf.Max(0, m_hp - (damage - GetDefence())));
 
         //StartCoroutine(Blink(0.1f));
 
@@ -76,9 +76,9 @@ public class EnemyStatus : MonoBehaviour {
     /// <summary>
     /// 死亡処理
     /// </summary>
-    public void dead()
+    public void Dead()
     {
-        _hp = 0;
+        m_hp = 0;
     }
 
 }

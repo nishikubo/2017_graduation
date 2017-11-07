@@ -27,7 +27,7 @@ public class Sword : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            GameObject mBullet = (GameObject)Instantiate(mSlashPrefub, mPoint.transform.position, Quaternion.identity);
+            GameObject mSlash = (GameObject)Instantiate(mSlashPrefub, mPoint.transform.position, Quaternion.identity);
         }
     }
 
