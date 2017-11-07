@@ -5,76 +5,74 @@ using UnityEngine.UI;
 
 public enum EnemyType
 {
-    None,
-    Physics,    //通常　徘徊タイプ（物理）
-    Magic,      //魔法  位置固定タイプ（遠隔）
-    Herd,       //群れタイプ
-    ItemDrop    //回復アイテムを落とすタイプ
+    NONE,
+    PHYSICS,    //通常　徘徊タイプ（物理）
+    MAGIC,      //魔法  位置固定タイプ（遠隔）
+    HERD,       //群れタイプ
+    DROP        //回復アイテムを落とすタイプ
 }
 
 
 public enum EnemyState
 {
-    None,   
-    Idle,   //待機
-    Walk,   //徘徊
-    Attack, //攻撃
-    Dead    //死亡
+    NONE,   
+    IDLE,   //待機
+    WALK,   //徘徊
+    ATTACK, //攻撃
+    DEAD    //死亡
 }
 
 public class Enemy : MonoBehaviour {
     public EnemyState State
     {
-        get { return _state; }
-        set { _state = value; }
+        get { return m_state; }
+        set { m_state = value; }
     }
 
     [SerializeField]
-    private EnemyState _state = EnemyState.None;  //プレイヤーの遷移
+    private EnemyState m_state = EnemyState.NONE;  //プレイヤーの遷移
 
-    private EnemyStatus _status;   //エネミーステータス
+    private EnemyStatus m_status;   //エネミーステータス
     [SerializeField, Tooltip("体力ゲージ")]
-    private Slider _hpBer;                     //体力ゲージ
+    private Slider m_hpBer;                     //体力ゲージ
 
 
     [SerializeField, Tooltip("移動速度　0.1とか")]
-    private Vector3 speed = Vector3.zero;
+    private Vector3 m_speed = Vector3.zero;
     [SerializeField, Tooltip("移動距離")]
-    private Vector3 distance = Vector3.zero;
-    private Vector3 moved = Vector3.zero;
+    private Vector3 m_distance = Vector3.zero;
+    private Vector3 m_moved = Vector3.zero;
 
-
-    private bool flag = false;
-    private float time = 0.0f;//攻撃時のタイム
+    private float m_attackTime = 0.0f;//攻撃時のタイム
 
     [SerializeField, Tooltip("回復アイテムを落とすか")]
-    private bool _item = false;//アイテムドロップをするかしないか
+    private bool m_item = false;//アイテムドロップをするかしないか
 
 
     // Use this for initialization
     void Start () {
-        _state = EnemyState.Idle;
-        _status = this.GetComponent<EnemyStatus>();
+        m_state = EnemyState.IDLE;
+        m_status = this.GetComponent<EnemyStatus>();
     }
 
     // Update is called once per frame
     void Update () {
         //攻撃とかの遷移
-        switch (_state)
+        switch (m_state)
         {
-            case EnemyState.None:    break;
-            case EnemyState.Idle:    IdleState(); break;
-            case EnemyState.Walk:    WalkState(); break;
-            case EnemyState.Attack:  AttackState(); break;
-            case EnemyState.Dead:    DeadState(); break;
+            case EnemyState.NONE:    break;
+            case EnemyState.IDLE:    IdleState(); break;
+            case EnemyState.WALK:    WalkState(); break;
+            case EnemyState.ATTACK:  AttackState(); break;
+            case EnemyState.DEAD:    DeadState(); break;
             default: break;
         }
 
         Debug_yo();
 
-        if (_status.GetHp() <= 0)
+        if (m_status.GetHp() <= 0)
         {
-            _state = EnemyState.Dead;
+            m_state = EnemyState.DEAD;
         }
     }
 
@@ -83,54 +81,54 @@ public class Enemy : MonoBehaviour {
     {
         //そのうち
         //カメラに入ったら動き出すとかに変えたい
-        _state = EnemyState.Walk;
+        m_state = EnemyState.WALK;
     }
 
     //徘徊状態
     private void WalkState()
     {
         //左右上下移動
-        float x = speed.x;
-        float y = speed.y;
+        float x = m_speed.x;
+        float y = m_speed.y;
 
-        if (moved.x >= distance.x)
+        if (m_moved.x >= m_distance.x)
         {
             x = 0;
         }
-        else if (moved.x + speed.x > distance.x)
+        else if (m_moved.x + m_speed.x > m_distance.x)
         {
-            x = distance.x - moved.x;
+            x = m_distance.x - m_moved.x;
         }
-        if (moved.y >= distance.y)
+        if (m_moved.y >= m_distance.y)
         {
             y = 0;
         }
-        else if (moved.y + speed.y > distance.y)
+        else if (m_moved.y + m_speed.y > m_distance.y)
         {
-            y = distance.y - moved.y;
+            y = m_distance.y - m_moved.y;
         }
         transform.Translate(x, y, 0);
-        moved.x += Mathf.Abs(speed.x);
-        moved.y += Mathf.Abs(speed.y);
+        m_moved.x += Mathf.Abs(m_speed.x);
+        m_moved.y += Mathf.Abs(m_speed.y);
 
         //Vector3 Scale = transform.localScale;
         bool flip = GetComponent<SpriteRenderer>().flipX;
         
-        if (moved.x >= distance.x && moved.y >= distance.y)
+        if (m_moved.x >= m_distance.x && m_moved.y >= m_distance.y)
         {
-            speed *= -1;
-            moved = Vector3.zero;
+            m_speed *= -1;
+            m_moved = Vector3.zero;
             //Scale.x *= -1;
             //flip = false;
 
 
         }
-        if(speed.x>=0)
+        if(m_speed.x>=0)
         {
             flip = true;
 
         }
-        else if(speed.x<0)
+        else if(m_speed.x<0)
         {
             flip = false;
 
@@ -149,25 +147,25 @@ public class Enemy : MonoBehaviour {
         StatusUI();
 
         //数秒ごとに攻撃
-        time += Time.deltaTime;
-        if (time > 5.0f)
+        m_attackTime += Time.deltaTime;
+        if (m_attackTime > 5.0f)
         {
             Debug.Log("攻撃した");
-            time = 0;
+            m_attackTime = 0;
         }
 
 
         if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log("攻撃された");
-            _status.damage(10);
+            m_status.Damage(10);
             //攻撃受けたらフラグ立てて
             //何秒かは攻撃しない
         }
 
     }
 
-    //private IEnumerator attack(bool damage=false)
+    //private IEnumerator Attack(bool damage=false)
     //{
     //    //プレイヤーを参照
 
@@ -192,9 +190,9 @@ public class Enemy : MonoBehaviour {
 
     private void DeadState()
     {
-        _status.dead();
+        m_status.Dead();
         Destroy(this.gameObject);
-        if(_item==true)
+        if(m_item==true)
         {
             ItemDrop();
         }
@@ -204,7 +202,7 @@ public class Enemy : MonoBehaviour {
     private void StatusUI()
     {
         //HPバー
-        _hpBer.value = _status.GetHp();
+        m_hpBer.value = m_status.GetHp();
         //GameObject.Find("EnemyCanvas").transform.LookAt(GameObject.Find("Main Camera").transform);
     }
 
@@ -223,8 +221,7 @@ public class Enemy : MonoBehaviour {
     {
         if(col.gameObject.tag=="Player")
         {
-            //flag = true;
-            _state = EnemyState.Attack;
+            m_state = EnemyState.ATTACK;
         }
     }
 
@@ -232,8 +229,7 @@ public class Enemy : MonoBehaviour {
     {
         if (col.gameObject.tag == "Player")
         {
-            //flag = false;
-            _state = EnemyState.Idle;
+            m_state = EnemyState.IDLE;
         }
     }
 
@@ -243,7 +239,7 @@ public class Enemy : MonoBehaviour {
     {
         if (col.gameObject.tag == "attack")
         {
-            _state = EnemyState.Attack;
+            m_state = EnemyState.ATTACK;
         }
     }
 
