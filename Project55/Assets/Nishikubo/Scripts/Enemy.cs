@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public enum EnemyType
-{
-    NONE,
-    PHYSICS,    //通常　徘徊タイプ（物理）
-    MAGIC,      //魔法  位置固定タイプ（遠隔）
-    HERD,       //群れタイプ
-    DROP        //回復アイテムを落とすタイプ
-}
+using DG.Tweening;
 
 
+/// <summary>
+/// 敵の状態遷移
+/// </summary>
 public enum EnemyState
 {
     NONE,   
@@ -22,6 +17,9 @@ public enum EnemyState
     DEAD    //死亡
 }
 
+/// <summary>
+/// 敵ベースクラス
+/// </summary>
 public class Enemy : MonoBehaviour {
     public EnemyState State
     {
@@ -30,54 +28,74 @@ public class Enemy : MonoBehaviour {
     }
 
     [SerializeField]
-    private EnemyState m_state = EnemyState.NONE;  //プレイヤーの遷移
+    protected EnemyState m_state = EnemyState.NONE;  //エネミーの遷移
 
-    private EnemyStatus m_status;   //エネミーステータス
-    [SerializeField, Tooltip("体力ゲージ")]
-    private Slider m_hpBer;                     //体力ゲージ
+    protected EnemyStatus m_status;   //エネミーステータス
+    //[SerializeField, Tooltip("体力ゲージ")]
+    //protected Slider m_hpBer;                    
 
-
-    [SerializeField, Tooltip("移動速度　0.1とか")]
-    private Vector3 m_speed = Vector3.zero;
+    /*移動時用*/
+    [SerializeField, Tooltip("移動速度 右->'+' ,左->'-'")]
+    protected float m_speed = 1.0f;
+    protected float m_sign = 0.0f;//m_speedが＋－どちらであるかを保存用
     [SerializeField, Tooltip("移動距離")]
-    private Vector3 m_distance = Vector3.zero;
-    private Vector3 m_moved = Vector3.zero;
+    protected float m_distance = 5.0f;
+    protected float m_moved = 0.0f;//現在の座標保存用
+    protected bool m_flip = false;    //反転させるか
 
-    private float m_attackTime = 0.0f;//攻撃時のタイム
+    /*攻撃時用*/
+    protected float m_attackTime = 0.0f;//攻撃時のタイム
 
-    [SerializeField, Tooltip("回復アイテムを落とすか")]
-    private bool m_item = false;//アイテムドロップをするかしないか
+    protected GameObject m_player;  //プレイヤー参照用
 
 
     // Use this for initialization
-    void Start () {
+    protected void Start () {
+        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+
         m_state = EnemyState.IDLE;
         m_status = this.GetComponent<EnemyStatus>();
+        m_flip = this.GetComponent<SpriteRenderer>().flipX;
+
+        //if(m_hpBer == null)
+        //{
+        //    m_hpBer = this.GetComponentInChildren<Slider>();
+        //    m_hpBer.maxValue = m_status.GetHp();
+        //}
+
+
+        m_moved = transform.position.x;//現在のX座標
+        m_sign = m_speed;//現在のスピード
+
+        m_player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
-    void Update () {
-        //攻撃とかの遷移
+    protected void Update () {
+        //状態遷移
         switch (m_state)
         {
             case EnemyState.NONE:    break;
             case EnemyState.IDLE:    IdleState(); break;
-            case EnemyState.WALK:    WalkState(); break;
+            case EnemyState.WALK:    WalkState(m_flip); break;
             case EnemyState.ATTACK:  AttackState(); break;
             case EnemyState.DEAD:    DeadState(); break;
             default: break;
         }
 
-        Debug_yo();
+        m_status.StatusUI();
 
         if (m_status.GetHp() <= 0)
         {
             m_state = EnemyState.DEAD;
         }
+
+        //Debug_yo();
+
     }
 
     //待機状態
-    private void IdleState()
+    protected virtual void IdleState()
     {
         //そのうち
         //カメラに入ったら動き出すとかに変えたい
@@ -85,79 +103,68 @@ public class Enemy : MonoBehaviour {
     }
 
     //徘徊状態
-    private void WalkState()
+    protected virtual void WalkState(bool flip)
     {
-        //左右上下移動
-        float x = m_speed.x;
-        float y = m_speed.y;
+        //+だったら右へ
+        if (m_sign > 0.0f)
+        {
+            if (Mathf.Floor(m_moved + m_distance) < Mathf.Floor(transform.position.x))
+            {
+                m_speed *= -1.0f;
+            }
+            else if (Mathf.Floor(transform.position.x) < Mathf.Floor(m_moved))
+            {
+                m_speed *= -1.0f;
+            }
+        }
+        //-だったら左へ
+        else if (0.0f > m_sign)
+        {
+            if (Mathf.Floor(m_moved + (-m_distance)) > Mathf.Floor(transform.position.x))
+            {
+                m_speed *= -1.0f;
+            }
+            else if (Mathf.Floor(transform.position.x) > Mathf.Floor(m_moved))
+            {
+                m_speed *= -1.0f;
+            }
+        }
+        transform.Translate(Vector3.right * Time.deltaTime * m_speed);
 
-        if (m_moved.x >= m_distance.x)
-        {
-            x = 0;
-        }
-        else if (m_moved.x + m_speed.x > m_distance.x)
-        {
-            x = m_distance.x - m_moved.x;
-        }
-        if (m_moved.y >= m_distance.y)
-        {
-            y = 0;
-        }
-        else if (m_moved.y + m_speed.y > m_distance.y)
-        {
-            y = m_distance.y - m_moved.y;
-        }
-        transform.Translate(x, y, 0);
-        m_moved.x += Mathf.Abs(m_speed.x);
-        m_moved.y += Mathf.Abs(m_speed.y);
-
-        //Vector3 Scale = transform.localScale;
-        bool flip = GetComponent<SpriteRenderer>().flipX;
-        
-        if (m_moved.x >= m_distance.x && m_moved.y >= m_distance.y)
-        {
-            m_speed *= -1;
-            m_moved = Vector3.zero;
-            //Scale.x *= -1;
-            //flip = false;
-
-
-        }
-        if(m_speed.x>=0)
+        //反転させるか
+        if (m_speed > 0.0f)
         {
             flip = true;
-
         }
-        else if(m_speed.x<0)
+        else if (m_speed < 0.0f)
         {
             flip = false;
-
         }
-
-        //transform.localScale = Scale;
         GetComponent<SpriteRenderer>().flipX = flip;
-
-
 
     }
 
     //攻撃状態
-    private void AttackState()
+    protected virtual void AttackState()
     {
-        StatusUI();
+        LookAtTarget(m_player,m_flip);
+
 
         //数秒ごとに攻撃
         m_attackTime += Time.deltaTime;
-        if (m_attackTime > 5.0f)
+        if (m_attackTime > 3.0f)
         {
-            Debug.Log("攻撃した");
+            Debug.Log("敵：えいっ！");
+            //仮
+            m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
+
             m_attackTime = 0;
         }
 
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            Debug.Log("攻撃された");
+            Debug.Log("敵：ぐはっ…");
             m_status.Damage(10);
             //攻撃受けたらフラグ立てて
             //何秒かは攻撃しない
@@ -165,67 +172,56 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    //private IEnumerator Attack(bool damage=false)
-    //{
-    //    //プレイヤーを参照
 
-
-    //    // ループ
-    //    while (true)
-    //    {
-    //            // 1秒毎にループします
-    //            yield return new WaitForSeconds(5f);
-    //        onTimer();
-
-    //    }
-    //}
-
-    //private void onTimer()
-    //{
-    //    Debug.Log("プレイヤーに攻撃している");
-    //}
-
-
-    //死亡状態
-
-    private void DeadState()
+    protected virtual void DeadState()
     {
         m_status.Dead();
         Destroy(this.gameObject);
-        if(m_item==true)
+    }
+
+
+    ///// <summary>
+    ///// 関連UI表示
+    ///// </summary>
+    //protected void StatusUI()
+    //{
+    //    //HPバー
+    //    m_hpBer.value = m_status.GetHp();
+    //}
+
+    /// <summary>
+    /// 対象の方向に反転
+    /// </summary>
+    /// <param name="target">向いてほしい対象</param>
+    /// <param name="flip">向き反転</param>
+    protected void LookAtTarget(GameObject target, bool flip)
+    {
+        float target_posX = target.transform.position.x;
+        //敵より＋かーか　向き反転
+        if (transform.position.x > target_posX)
         {
-            ItemDrop();
+            m_flip = false;
         }
+        else if (transform.position.x < target_posX)
+        {
+            m_flip = true;
+        }
+        GetComponent<SpriteRenderer>().flipX = flip;
     }
 
-    //関連UI表示
-    private void StatusUI()
-    {
-        //HPバー
-        m_hpBer.value = m_status.GetHp();
-        //GameObject.Find("EnemyCanvas").transform.LookAt(GameObject.Find("Main Camera").transform);
-    }
-
-    //アイテム
-    private void ItemDrop()
-    {
-        //たおしたときに回復アイテム落とす
-        // プレハブを取得
-        GameObject prefab = (GameObject)Resources.Load("Prefabs/Recovery");
-        // プレハブからインスタンスを生成
-        Instantiate(prefab, transform.position, Quaternion.identity);
-    }
-
-
-    private void OnCollisionEnter2D(Collision2D col)
+    protected void OnCollisionEnter2D(Collision2D col)
     {
         if(col.gameObject.tag=="Player")
         {
+            Debug.Log("敵：えいっ！");
+            //仮
+            m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
+
             m_state = EnemyState.ATTACK;
         }
     }
 
-    private void OnCollisionExit2D(Collision2D col)
+    protected void OnCollisionExit2D(Collision2D col)
     {
         if (col.gameObject.tag == "Player")
         {
@@ -233,20 +229,22 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    //プレイヤーに攻撃されたら
-    //とりあえず剣にattackタグをつけといた
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.gameObject.tag == "attack")
-        {
-            m_state = EnemyState.ATTACK;
-        }
-    }
+    ////プレイヤーに攻撃されたら
+    ////とりあえず剣にattackタグをつけといた
+    //protected void OnTriggerEnter2D(Collider2D col)
+    //{
+    //    if (col.gameObject.tag == "attack")
+    //    {
+    //        //m_state = EnemyState.ATTACK;
+    //        Debug.Log("攻撃された");
+    //        m_status.Damage(10);
+    //    }
+    //}
 
 
 
     //デバッグ用いろいろー
-    private void Debug_yo()
+    public void Debug_yo()
     {
 
     }

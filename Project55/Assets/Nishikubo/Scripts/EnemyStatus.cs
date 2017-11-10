@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
+/// <summary>
+/// 敵のステータスクラス
+/// </summary>
 public class EnemyStatus : MonoBehaviour {
 
     [SerializeField, Tooltip("攻撃力")]
@@ -12,9 +16,21 @@ public class EnemyStatus : MonoBehaviour {
     private int m_hp = 100;      //体力
     private int m_maxHp = 0;     //体力最大値
 
+    [SerializeField, Tooltip("体力ゲージ")]
+    protected Slider m_hpBer;
+
     private void Start()
     {
         m_maxHp = GetHp();
+
+        if (m_hpBer == null)
+        {
+            m_hpBer = this.GetComponentInChildren<Slider>();
+        }
+
+        m_hpBer.maxValue = m_maxHp;
+        m_hpBer.value = m_maxHp;
+
     }
 
     public void SetAttack(int attack) { m_attack = attack; }
@@ -80,5 +96,15 @@ public class EnemyStatus : MonoBehaviour {
     {
         m_hp = 0;
     }
+
+    /// <summary>
+    /// 関連UI表示
+    /// </summary>
+    public void StatusUI()
+    {
+        //HPバー
+        m_hpBer.value = GetHp();
+    }
+
 
 }
