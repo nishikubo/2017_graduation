@@ -23,15 +23,15 @@ public class AttackBase : MonoBehaviour {
 
     protected Vector3 SetDir(Vector3 dir)
     {
-        GameObject player = GameObject.Find("Player");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
         dir = player.transform.localScale;
 
         return dir;
     }
     protected Vector2 SetVec()
     {
-        GameObject player = GameObject.Find("Player");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        return new Vector2(GameObject.Find("Player").transform.localScale.x, 0);
+        return new Vector2(GameObject.FindGameObjectWithTag("Player").transform.localScale.x, 0);
     }
 }

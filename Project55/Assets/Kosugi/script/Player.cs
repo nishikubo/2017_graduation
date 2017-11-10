@@ -42,13 +42,13 @@ public class Player : MonoBehaviour
     [SerializeField, Header("武器リソースのアクティブ化用")]
     private GameObject[] mWeaponResource;
 
-    [Header("GameのState管理")]
+    [Header("Stateの管理")]
     private StateManager mStateManager;
 
     void Start()
     {
         //取得
-        mStateManager = GameObject.Find("GameManager").GetComponent<StateManager>();
+        mStateManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<StateManager>();
 
         //設定
         mNewWeapon = Scene.GetWeapon();

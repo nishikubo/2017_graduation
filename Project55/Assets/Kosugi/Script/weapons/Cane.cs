@@ -8,7 +8,7 @@ public class Cane : WeaponBase
     [SerializeField, Header("詠唱時間")]
     private float mCastTime = 0.0f;
 
-    
+    /*詠唱中は動けない？*/
 
     void Start () {
 		

@@ -20,7 +20,7 @@ public class WeaponChange : MonoBehaviour {
     private GameObject mBG;
 
     void Start () {
-        mStateManager = GameObject.Find("GameManager").GetComponent<StateManager>();
+        mStateManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<StateManager>();
 
         mWeapon = Scene.GetWeapon();
 
