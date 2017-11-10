@@ -15,15 +15,27 @@ public class ActiveUI : MonoBehaviour {
     [SerializeField, Header("選択後のUI画像")]
     private Sprite[] mIAfterImage;
 
+    private int mNum;
 
     [Header("GameのState管理")]
     private StateManager mStateManager;
 
     void Start () {
-		//for(int i = 0; i < mSelectObjects.Length; i++)
-  //      {
-  //          mSelectObjects[i].GetComponent<Image>().sprite = mBeforeImage[i];
-  //      }
+        switch (Scene.GetWeapon())
+        {
+            case WeaponsList.Sword:
+                mNum = 0;
+                break;
+            case WeaponsList.Gun:
+                mNum = 1;
+                break;
+            case WeaponsList.Fist:
+                mNum = 2;
+                break;
+            case WeaponsList.Cane:
+                mNum = 3;
+                break;
+        }
 	}
 	
 	void Update () {
@@ -36,31 +48,51 @@ public class ActiveUI : MonoBehaviour {
 
         if (mInputVec.y > 0)
         {
-            mSelectObjects[0].GetComponent<Image>().sprite = mIAfterImage[0];
-            mSelectObjects[1].GetComponent<Image>().sprite = mBeforeImage[1];
-            mSelectObjects[2].GetComponent<Image>().sprite = mBeforeImage[2];
-            mSelectObjects[3].GetComponent<Image>().sprite = mBeforeImage[3];
+            mNum = 0;
         }
         else if (mInputVec.x > 0)
         {
-            mSelectObjects[0].GetComponent<Image>().sprite = mBeforeImage[0];
-            mSelectObjects[1].GetComponent<Image>().sprite = mIAfterImage[1];
-            mSelectObjects[2].GetComponent<Image>().sprite = mBeforeImage[2];
-            mSelectObjects[3].GetComponent<Image>().sprite = mBeforeImage[3];
+            mNum = 1;
         }
         else if (mInputVec.y < 0)
         {
-            mSelectObjects[0].GetComponent<Image>().sprite = mBeforeImage[0];
-            mSelectObjects[1].GetComponent<Image>().sprite = mBeforeImage[1];
-            mSelectObjects[2].GetComponent<Image>().sprite = mIAfterImage[2];
-            mSelectObjects[3].GetComponent<Image>().sprite = mBeforeImage[3];
+            mNum = 2;
         }
         else if (mInputVec.x < 0)
         {
-            mSelectObjects[0].GetComponent<Image>().sprite = mBeforeImage[0];
-            mSelectObjects[1].GetComponent<Image>().sprite = mBeforeImage[1];
-            mSelectObjects[2].GetComponent<Image>().sprite = mBeforeImage[2];
-            mSelectObjects[3].GetComponent<Image>().sprite = mIAfterImage[3];
+            mNum = 3;
+        }
+        Set(mNum);
+    }
+
+    void Set(int num)
+    {
+        switch (num)
+        {
+            case 0:
+                mSelectObjects[0].GetComponent<Image>().sprite = mIAfterImage[0];
+                mSelectObjects[1].GetComponent<Image>().sprite = mBeforeImage[1];
+                mSelectObjects[2].GetComponent<Image>().sprite = mBeforeImage[2];
+                mSelectObjects[3].GetComponent<Image>().sprite = mBeforeImage[3];
+                break;
+            case 1:
+                mSelectObjects[0].GetComponent<Image>().sprite = mBeforeImage[0];
+                mSelectObjects[1].GetComponent<Image>().sprite = mIAfterImage[1];
+                mSelectObjects[2].GetComponent<Image>().sprite = mBeforeImage[2];
+                mSelectObjects[3].GetComponent<Image>().sprite = mBeforeImage[3];
+                break;
+            case 2:
+                mSelectObjects[0].GetComponent<Image>().sprite = mBeforeImage[0];
+                mSelectObjects[1].GetComponent<Image>().sprite = mBeforeImage[1];
+                mSelectObjects[2].GetComponent<Image>().sprite = mIAfterImage[2];
+                mSelectObjects[3].GetComponent<Image>().sprite = mBeforeImage[3];
+                break;
+            case 3:
+                mSelectObjects[0].GetComponent<Image>().sprite = mBeforeImage[0];
+                mSelectObjects[1].GetComponent<Image>().sprite = mBeforeImage[1];
+                mSelectObjects[2].GetComponent<Image>().sprite = mBeforeImage[2];
+                mSelectObjects[3].GetComponent<Image>().sprite = mIAfterImage[3];
+                break;
         }
     }
 }

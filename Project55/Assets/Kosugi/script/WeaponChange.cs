@@ -21,6 +21,9 @@ public class WeaponChange : MonoBehaviour {
 
     void Start () {
         mStateManager = GameObject.Find("GameManager").GetComponent<StateManager>();
+
+        mWeapon = Scene.GetWeapon();
+
 	}
 	
 
