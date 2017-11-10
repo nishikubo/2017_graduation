@@ -9,7 +9,7 @@ public class debugattack : debugweapon {
 
     // Use this for initialization
     void Start () {
-        m_enemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
+        m_enemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
 
     }
 

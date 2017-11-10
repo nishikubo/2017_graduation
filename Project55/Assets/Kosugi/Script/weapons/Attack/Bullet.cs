@@ -13,7 +13,7 @@ public class Bullet : AttackBase {
         SetDir(gameObject.transform.localScale);
         mVec = SetVec();
 
-        mEnemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
+        mEnemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
     }
 	
 	void Update () {

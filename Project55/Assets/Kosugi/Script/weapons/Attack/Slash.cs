@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Slash : AttackBase {
 
+    [Header("Stateの管理")]
     private EnemyManager mEnemyManager;
 
     void Start()
     {
         mVec = SetVec();
 
-        mEnemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
+        mEnemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
     }
 
     void Update()

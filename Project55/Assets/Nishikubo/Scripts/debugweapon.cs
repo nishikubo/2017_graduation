@@ -21,7 +21,7 @@ public class debugweapon : Scene {
         WeaponsList m_weapon = Scene.GetWeapon();
         Debug.Log("start: "+m_weapon);
 
-        m_enemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
+        m_enemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
 
         
 	}
