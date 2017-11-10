@@ -18,7 +18,7 @@ public class debugweapon : Scene {
 
 	// Use this for initialization
 	void Start () {
-        Weapon m_weapon = Scene.GetWeapon();
+        WeaponsList m_weapon = Scene.GetWeapon();
         Debug.Log("start: "+m_weapon);
 
         m_enemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();

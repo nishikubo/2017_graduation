@@ -42,8 +42,8 @@ public class Scene : MonoBehaviour {
     //https://gametukurikata.com/program/data シーン遷移参考にして
 
     [SerializeField,Tooltip("対象武器選択(使わないときはNone)")]
-    private Weapon m_weapon = Weapon.NONE;
-    public static Weapon m_weaponCheck;  //保持
+    private WeaponsList m_weapon = WeaponsList.None;
+    public static WeaponsList m_weaponCheck;  //保持
 
 
     // Update is called once per frame
@@ -91,7 +91,7 @@ public class Scene : MonoBehaviour {
     /// 武器保持
     /// </summary>
     /// <returns></returns>
-    public static Weapon GetWeapon()
+    public static WeaponsList GetWeapon()
     {
         return m_weaponCheck;
     }

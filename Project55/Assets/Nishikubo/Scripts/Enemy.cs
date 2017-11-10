@@ -156,7 +156,8 @@ public class Enemy : MonoBehaviour {
         {
             Debug.Log("敵：えいっ！");
             //仮
-            m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
+            //m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
+            m_player.GetComponent<Player>().PlayerDamage(m_status.Attack());
 
             m_attackTime = 0;
         }
@@ -215,7 +216,8 @@ public class Enemy : MonoBehaviour {
         {
             Debug.Log("敵：えいっ！");
             //仮
-            m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
+            //m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
+            m_player.GetComponent<Player>().PlayerDamage(m_status.Attack());
 
             m_state = EnemyState.ATTACK;
         }

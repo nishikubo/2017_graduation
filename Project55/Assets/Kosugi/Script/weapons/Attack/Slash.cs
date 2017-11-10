@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Slash : AttackBase {
 
+    private EnemyManager mEnemyManager;
+
     void Start()
     {
         mVec = SetVec();
+
+        mEnemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
     }
 
     void Update()
@@ -22,7 +26,7 @@ public class Slash : AttackBase {
     {
         if (col.gameObject.tag == "Enemy")
         {
-            col.gameObject.GetComponent<EnemyStatus>().Damage(mDamage);
+            mEnemyManager.EnemyDamage(mDamage, col.gameObject);
         }
     }
 }

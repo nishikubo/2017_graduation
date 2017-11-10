@@ -154,6 +154,11 @@ public class Player : MonoBehaviour
         ActiveSetting();
     }
 
+    public void PlayerDamage(int damage)
+    {
+        mHP -= damage;
+    }
+
     /// <summary>
     /// プレイヤーのステータス管理
     /// </summary>
@@ -181,10 +186,10 @@ public class Player : MonoBehaviour
     /*----当たり判定関連----*/
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Enemy")
-        {
-            mHP -= col.gameObject.GetComponent<EnemyStatus>().GetAttack();
-        }
+        //if (col.gameObject.tag == "Enemy")
+        //{
+        //    mHP -= col.gameObject.GetComponent<EnemyStatus>().GetAttack();
+        //}
     }
     private void OnCollisionStay2D(Collision2D col)
     {

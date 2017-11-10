@@ -7,9 +7,13 @@ public class Bullet : AttackBase {
     [SerializeField, Header("弾速")]
     private float mSpeed = 10.0f;
 
+    private EnemyManager mEnemyManager;
+
     void Start () {
         SetDir(gameObject.transform.localScale);
         mVec = SetVec();
+
+        mEnemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
     }
 	
 	void Update () {
@@ -26,7 +30,7 @@ public class Bullet : AttackBase {
     {
         if (col.gameObject.tag == "Enemy")
         {
-            col.gameObject.GetComponent<EnemyStatus>().Damage(mDamage);
+            mEnemyManager.EnemyDamage(mDamage, col.gameObject);
             Destroy(gameObject);
         }
     }
