@@ -2,16 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sword : MonoBehaviour {
-
-    [SerializeField, Header("斬撃プレハブ")]
-    private GameObject mSlashPrefub;
-
-    [SerializeField, Header("攻撃ポイント")]
-    private GameObject mPoint;
-
-    [SerializeField, Header("消費HP")]
-    private int mWeaponHP = 4;
+public class Sword : WeaponBase {
 
     void Start()
     {
@@ -20,19 +11,21 @@ public class Sword : MonoBehaviour {
 
     void Update()
     {
-        Attack();
-    }
-
-    void Attack()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.K) && !mIsRecast)
         {
-            GameObject mSlash = (GameObject)Instantiate(mSlashPrefub, mPoint.transform.position, Quaternion.identity);
+            Attack(mAtkPrefub, mAtkPos, true);
+            mIsRecast = true;
+            mTime = mRecastTime;
         }
-    }
 
-    public float GetWeaponHP()
-    {
-        return mWeaponHP;
+        if (mIsRecast)
+        {
+            mTime -= Time.deltaTime;
+            if (mTime <= 0)
+            {
+                mIsRecast = false;
+                mTime = mRecastTime;
+            }
+        }
     }
 }

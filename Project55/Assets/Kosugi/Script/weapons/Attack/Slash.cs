@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slash : MonoBehaviour {
-
-    [SerializeField, Header("与ダメージ")]
-    private int mDamage = 6;
-
-    [SerializeField, Header("消滅速度")]
-    private float mTime = 2.0f;
+public class Slash : AttackBase {
 
     void Start()
     {
-
+        mVec = SetVec();
     }
 
     void Update()
@@ -28,8 +22,7 @@ public class Slash : MonoBehaviour {
     {
         if (col.gameObject.tag == "Enemy")
         {
-            col.gameObject.GetComponent<Enemy>().Damage(mDamage);
-            Destroy(gameObject);
+            col.gameObject.GetComponent<EnemyStatus>().Damage(mDamage);
         }
     }
 }

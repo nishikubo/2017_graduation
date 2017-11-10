@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
         mStateManager = GameObject.Find("GameManager").GetComponent<StateManager>();
 
         //設定
-        mNewWeapon = Scene.StartWeapon();
+        mNewWeapon = Scene.GetWeapon();
         mBeforeWeapon = WeaponsList.None;
         mWeaponScript = new Dictionary<WeaponsList, MonoBehaviour>()
         {
@@ -138,10 +138,17 @@ public class Player : MonoBehaviour
         if (mNewWeapon == WeaponsList.Sword)
         {
             mHP -= mWeaponScript[WeaponsList.Sword].GetComponent<Sword>().GetWeaponHP();
+            mWeaponScript[WeaponsList.Sword].GetComponent<Sword>().mIsRecast = false;
         }
         if (mNewWeapon == WeaponsList.Gun)
         {
             mHP -= mWeaponScript[WeaponsList.Gun].GetComponent<Gun>().GetWeaponHP();
+            mWeaponScript[WeaponsList.Gun].GetComponent<Gun>().mIsRecast = false;
+        }
+        if (mNewWeapon == WeaponsList.Cane)
+        {
+            mHP -= mWeaponScript[WeaponsList.Cane].GetComponent<Cane>().GetWeaponHP();
+            mWeaponScript[WeaponsList.Cane].GetComponent<Cane>().mIsRecast = false;
         }
 
         ActiveSetting();

@@ -2,36 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour {
-
-    [SerializeField, Header("銃弾プレハブ")]
-    private GameObject mBulletPrefub;
-
-    [SerializeField, Header("攻撃ポイント")]
-    private GameObject mPoint;
-
-    [SerializeField, Header("消費HP")]
-    private int mWeaponHP = 4;
+public class Gun : WeaponBase {
 
     void Start () {
 
 	}
-	
-	void Update () {
-        Attack();
-	}
 
-    void Attack()
+    void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.K) && !mIsRecast)
         {
-            GameObject mBullet=(GameObject)Instantiate(mBulletPrefub, mPoint.transform.position, Quaternion.identity);
-            mBullet.GetComponent<Bullet>().SetVector(new Vector2(transform.localScale.x, 0));
+            Attack(mAtkPrefub, mAtkPos, false);
+            mIsRecast = true;
+            mTime = mRecastTime;
+        }
+
+        if (mIsRecast)
+        {
+            mTime -= Time.deltaTime;
+            if (mTime <= 0)
+            {
+                mIsRecast = false;
+                mTime = mRecastTime;
+            }
         }
     }
 
-    public float GetWeaponHP()
+    void Recast()
     {
-        return mWeaponHP;
+
     }
 }
