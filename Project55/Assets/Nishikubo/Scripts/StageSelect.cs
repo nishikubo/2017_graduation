@@ -4,6 +4,10 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 
+/// <summary>
+/// ステージセレクトクラス
+/// ステージを選ぶ際に呼ばれる
+/// </summary>
 public class StageSelect : MonoBehaviour {
 
     [SerializeField,Tooltip("ステージの最大個数")]
@@ -11,9 +15,9 @@ public class StageSelect : MonoBehaviour {
     private GameObject m_frame; //親参照用
     private GameObject[] m_prefab;   //生成したプレファブ
 
-    private GameObject m_center;
+    //private GameObject m_center;//真ん中に表示されてるステージ
 
-    private bool flag = false;//Dotween中か
+    private bool m_playing = false;//Dotween中か
 
 
     void Awake()
@@ -35,58 +39,24 @@ public class StageSelect : MonoBehaviour {
             m_prefab[i].transform.SetParent(m_frame.transform, false);
         }
 
-        m_center = m_prefab[0];
+        //m_center = m_prefab[0];
 
     }
 
     // Update is called once per frame
     void Update () {
 
-
         if (Input.GetButtonDown("Right"))
         {
-
-            Debug.Log("right");
-            //右押しても右にはいかない
-            if (m_prefab[m_maxNum - 1].GetComponent<RectTransform>().localPosition.x <= 0)
-            {
-                Debug.Log("oooooooo");
-            }
-            else if(!flag)
-            {
-                StartCoroutine("sleep");
-
-                for (int i = 0; i < m_maxNum; i++)
-                {
-                    //m_prefab[i].GetComponent<RectTransform>().localPosition = new Vector3(m_prefab[i].GetComponent<RectTransform>().localPosition.x - 500.0f, m_prefab[i].GetComponent<RectTransform>().localPosition.y, m_prefab[i].GetComponent<RectTransform>().localPosition.z);
-                    m_prefab[i].GetComponent<RectTransform>().DOLocalMoveX(m_prefab[i].GetComponent<RectTransform>().localPosition.x - 500.0f, 1.0f);
-
-                }
-            }
+            NextStage();
         }
-
         if (Input.GetButtonDown("Left"))
         {
-            Debug.Log("reft");
-
-            //左押しても左にはいかない
-            if (m_prefab[0].GetComponent<RectTransform>().localPosition.x >= 0)
-            {
-                Debug.Log("aaaaaa");
-            }
-            else if(!flag)
-            {
-                StartCoroutine("sleep");
-
-                for (int i = 0; i < m_maxNum; i++)
-                {
-                    //m_prefab[i].GetComponent<RectTransform>().localPosition = new Vector3(m_prefab[i].GetComponent<RectTransform>().localPosition.x + 500.0f, m_prefab[i].GetComponent<RectTransform>().localPosition.y, m_prefab[i].GetComponent<RectTransform>().localPosition.z);
-                    m_prefab[i].GetComponent<RectTransform>().DOLocalMoveX(m_prefab[i].GetComponent<RectTransform>().localPosition.x + 500.0f, 1.0f);
-
-                }
-            }
+            BeforeStage();
         }
 
+
+        /*
         for (int i = 0; i < m_maxNum; i++)
         {
             if(m_prefab[i].GetComponent<RectTransform>().localPosition.x == 0)
@@ -94,15 +64,63 @@ public class StageSelect : MonoBehaviour {
                 m_center = m_prefab[i];
             }
         }
-        
+        */
     }
 
+    /// <summary>
+    /// 右押すと反応
+    /// </summary>
+    private void NextStage()
+    {
+        //右押しても右にはいかない
+        if (m_prefab[m_maxNum - 1].GetComponent<RectTransform>().localPosition.x <= 0.0f)
+        {
+            //これ以上いかない
+        }
+        else if (!m_playing)
+        {
+            StartCoroutine("sleep");
+
+            for (int i = 0; i < m_maxNum; i++)
+            {
+                //m_prefab[i].GetComponent<RectTransform>().localPosition = new Vector3(m_prefab[i].GetComponent<RectTransform>().localPosition.x - 500.0f, m_prefab[i].GetComponent<RectTransform>().localPosition.y, m_prefab[i].GetComponent<RectTransform>().localPosition.z);
+                m_prefab[i].GetComponent<RectTransform>().DOLocalMoveX(m_prefab[i].GetComponent<RectTransform>().localPosition.x - 500.0f, 1.0f);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 左押すと反応
+    /// </summary>
+    private void BeforeStage()
+    {
+        //左押しても左にはいかない
+        if (m_prefab[0].GetComponent<RectTransform>().localPosition.x >= 0.0f)
+        {
+            //これ以上いかない
+        }
+        else if (!m_playing)
+        {
+            StartCoroutine("sleep");
+
+            for (int i = 0; i < m_maxNum; i++)
+            {
+                //m_prefab[i].GetComponent<RectTransform>().localPosition = new Vector3(m_prefab[i].GetComponent<RectTransform>().localPosition.x + 500.0f, m_prefab[i].GetComponent<RectTransform>().localPosition.y, m_prefab[i].GetComponent<RectTransform>().localPosition.z);
+                m_prefab[i].GetComponent<RectTransform>().DOLocalMoveX(m_prefab[i].GetComponent<RectTransform>().localPosition.x + 500.0f, 1.0f);
+            }
+        }
+    }
+
+    /// <summary>
+    /// カウントしてる間は反応させない
+    /// </summary>
+    /// <returns></returns>
     IEnumerator sleep()
     {
         Debug.Log("開始");
-        flag = true;
-        yield return new WaitForSeconds(1.5f);
+        m_playing = true;
+        yield return new WaitForSeconds(1.2f);
         Debug.Log("1.5秒経ちました");
-        flag = false;
+        m_playing = false;
    }
 }

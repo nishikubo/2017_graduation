@@ -5,6 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 
+/// <summary>
+/// シーン管理クラス
+/// 複数は配置できないので注意
+/// </summary>
 public class SceneNavigator : SingletonMonoBehaviour<SceneNavigator> {
 
     //フェード中か否か

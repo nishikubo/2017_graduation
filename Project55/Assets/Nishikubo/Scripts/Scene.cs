@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
+/// <summary>
+/// シーン全体
+/// 追加する際はシーンの名前と一致させること
+/// </summary>
 public enum SceneType
 {
     Title,
@@ -16,6 +19,10 @@ public enum SceneType
     Stage02*/
 }
 
+/// <summary>
+/// 武器選択
+/// 後日別クラスに移動予定
+/// </summary>
 public enum Weapon
 {
     NONE,
@@ -25,7 +32,9 @@ public enum Weapon
     CANE
 }
 
-
+/// <summary>
+/// シーン遷移クラス
+/// </summary>
 public class Scene : MonoBehaviour {
 
     [SerializeField,Tooltip("飛ぶシーン選択")]
@@ -108,4 +117,6 @@ public class Scene : MonoBehaviour {
             Debug.Log("reft");
         }
     }
+
+
 }
