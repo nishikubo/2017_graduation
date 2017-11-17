@@ -80,7 +80,7 @@ public class StageSelect : MonoBehaviour {
     /// <summary>
     /// 右押すと反応
     /// </summary>
-    private void NextStage()
+    public void NextStage()
     {
         //右押しても右にはいかない
         if (m_prefab[m_maxNum - 1].GetComponent<RectTransform>().localPosition.x <= 0.0f)
@@ -102,7 +102,7 @@ public class StageSelect : MonoBehaviour {
     /// <summary>
     /// 左押すと反応
     /// </summary>
-    private void BeforeStage()
+    public void BeforeStage()
     {
         //左押しても左にはいかない
         if (m_prefab[0].GetComponent<RectTransform>().localPosition.x >= 0.0f)

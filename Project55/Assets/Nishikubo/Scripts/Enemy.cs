@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-
 /// <summary>
 /// 敵の状態遷移
 /// </summary>
@@ -31,16 +30,10 @@ public class Enemy : MonoBehaviour {
     protected EnemyState m_state = EnemyState.NONE;  //エネミーの遷移
 
     protected EnemyStatus m_status;   //エネミーステータス
-    //[SerializeField, Tooltip("体力ゲージ")]
-    //protected Slider m_hpBer;                    
 
     /*移動時用*/
     [SerializeField, Tooltip("移動速度 右->'+' ,左->'-'")]
     protected float m_speed = 1.0f;
-    protected float m_sign = 0.0f;//m_speedが＋－どちらであるかを保存用
-    [SerializeField, Tooltip("移動距離")]
-    protected float m_distance = 5.0f;
-    protected float m_moved = 0.0f;//現在の座標保存用
     protected bool m_flip = false;    //反転させるか
 
     /*攻撃時用*/
@@ -48,26 +41,23 @@ public class Enemy : MonoBehaviour {
 
     protected GameObject m_player;  //プレイヤー参照用
 
+    protected EnemyManager m_enemyManager;
+
+    protected void Awake()
+    {
+        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+    }
 
     // Use this for initialization
-    protected void Start () {
-        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+    protected virtual void Start () {
 
         m_state = EnemyState.IDLE;
         m_status = this.GetComponent<EnemyStatus>();
         m_flip = this.GetComponent<SpriteRenderer>().flipX;
 
-        //if(m_hpBer == null)
-        //{
-        //    m_hpBer = this.GetComponentInChildren<Slider>();
-        //    m_hpBer.maxValue = m_status.GetHp();
-        //}
-
-
-        m_moved = transform.position.x;//現在のX座標
-        m_sign = m_speed;//現在のスピード
-
         m_player = GameObject.FindGameObjectWithTag("Player");
+        m_enemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
+
     }
 
     // Update is called once per frame
@@ -77,7 +67,7 @@ public class Enemy : MonoBehaviour {
         {
             case EnemyState.NONE:    break;
             case EnemyState.IDLE:    IdleState(); break;
-            case EnemyState.WALK:    WalkState(m_flip); break;
+            case EnemyState.WALK:    WalkState(); break;
             case EnemyState.ATTACK:  AttackState(); break;
             case EnemyState.DEAD:    DeadState(); break;
             default: break;
@@ -90,11 +80,11 @@ public class Enemy : MonoBehaviour {
             m_state = EnemyState.DEAD;
         }
 
-        //Debug_yo();
-
     }
 
-    //待機状態
+    /// <summary>
+    /// 待機状態
+    /// </summary>
     protected virtual void IdleState()
     {
         //そのうち
@@ -102,61 +92,34 @@ public class Enemy : MonoBehaviour {
         m_state = EnemyState.WALK;
     }
 
-    //徘徊状態
-    protected virtual void WalkState(bool flip)
+    /// <summary>
+    /// 徘徊状態
+    /// </summary>
+    protected virtual void WalkState()
     {
-        //+だったら右へ
-        if (m_sign > 0.0f)
+        //まっすぐ直進
+        if(m_flip)
         {
-            if (Mathf.Floor(m_moved + m_distance) < Mathf.Floor(transform.position.x))
-            {
-                m_speed *= -1.0f;
-            }
-            else if (Mathf.Floor(transform.position.x) < Mathf.Floor(m_moved))
-            {
-                m_speed *= -1.0f;
-            }
+            transform.Translate(Vector3.right * Time.deltaTime * m_speed);
         }
-        //-だったら左へ
-        else if (0.0f > m_sign)
+        else if(!m_flip)
         {
-            if (Mathf.Floor(m_moved + (-m_distance)) > Mathf.Floor(transform.position.x))
-            {
-                m_speed *= -1.0f;
-            }
-            else if (Mathf.Floor(transform.position.x) > Mathf.Floor(m_moved))
-            {
-                m_speed *= -1.0f;
-            }
+            transform.Translate(Vector3.left * Time.deltaTime * m_speed);
         }
-        transform.Translate(Vector3.right * Time.deltaTime * m_speed);
-
-        //反転させるか
-        if (m_speed > 0.0f)
-        {
-            flip = true;
-        }
-        else if (m_speed < 0.0f)
-        {
-            flip = false;
-        }
-        GetComponent<SpriteRenderer>().flipX = flip;
-
     }
 
-    //攻撃状態
+    /// <summary>
+    /// 攻撃状態
+    /// </summary>
     protected virtual void AttackState()
     {
         LookAtTarget(m_player,m_flip);
-
 
         //数秒ごとに攻撃
         m_attackTime += Time.deltaTime;
         if (m_attackTime > 3.0f)
         {
             Debug.Log("敵：えいっ！");
-            //仮
-            //m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
             m_player.GetComponent<Player>().PlayerDamage(m_status.Attack());
 
             m_attackTime = 0;
@@ -173,22 +136,15 @@ public class Enemy : MonoBehaviour {
 
     }
 
-
+    /// <summary>
+    /// 死亡状態
+    /// </summary>
     protected virtual void DeadState()
     {
         m_status.Dead();
-        Destroy(this.gameObject);
+        m_enemyManager.EnemyDead(this.gameObject);
     }
 
-
-    ///// <summary>
-    ///// 関連UI表示
-    ///// </summary>
-    //protected void StatusUI()
-    //{
-    //    //HPバー
-    //    m_hpBer.value = m_status.GetHp();
-    //}
 
     /// <summary>
     /// 対象の方向に反転
@@ -201,11 +157,11 @@ public class Enemy : MonoBehaviour {
         //敵より＋かーか　向き反転
         if (transform.position.x > target_posX)
         {
-            m_flip = false;
+            flip = false;
         }
         else if (transform.position.x < target_posX)
         {
-            m_flip = true;
+            flip = true;
         }
         GetComponent<SpriteRenderer>().flipX = flip;
     }
@@ -215,8 +171,6 @@ public class Enemy : MonoBehaviour {
         if(col.gameObject.tag=="Player")
         {
             Debug.Log("敵：えいっ！");
-            //仮
-            //m_player.GetComponent<debugweapon>().DebugDamage(m_status.Attack());
             m_player.GetComponent<Player>().PlayerDamage(m_status.Attack());
 
             m_state = EnemyState.ATTACK;
@@ -230,20 +184,6 @@ public class Enemy : MonoBehaviour {
             m_state = EnemyState.IDLE;
         }
     }
-
-    ////プレイヤーに攻撃されたら
-    ////とりあえず剣にattackタグをつけといた
-    //protected void OnTriggerEnter2D(Collider2D col)
-    //{
-    //    if (col.gameObject.tag == "attack")
-    //    {
-    //        //m_state = EnemyState.ATTACK;
-    //        Debug.Log("攻撃された");
-    //        m_status.Damage(10);
-    //    }
-    //}
-
-
 
     //デバッグ用いろいろー
     public void Debug_yo()

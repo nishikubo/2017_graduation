@@ -39,7 +39,6 @@ public class Scene : MonoBehaviour {
 
     [SerializeField,Tooltip("飛ぶシーン選択")]
     private SceneType m_currentScene = SceneType.Title;
-    //https://gametukurikata.com/program/data シーン遷移参考にして
 
     [SerializeField,Tooltip("対象武器選択(使わないときはNone)")]
     private WeaponsList m_weapon = WeaponsList.None;
@@ -47,14 +46,14 @@ public class Scene : MonoBehaviour {
 
 
     // Update is called once per frame
-    void Update()
-    {
-        switch(m_currentScene)
-        {
-            case SceneType.StageSelect: NextStage(); BeforeStage(); break;
-            default: break;
-        }
-    }
+    //void Update()
+    //{
+    //    switch(m_currentScene)
+    //    {
+    //        case SceneType.StageSelect: NextStage(); BeforeStage(); break;
+    //        default: break;
+    //    }
+    //}
 
 
     /// <summary>
@@ -77,12 +76,10 @@ public class Scene : MonoBehaviour {
     /// 武器選択
     /// </summary>
     /// <param name="weapon"></param>
-    public void OnWeapon(string weapon)
+    public void OnWeapon()
     {
         
         m_weaponCheck = m_weapon;
-        weapon = m_weaponCheck.ToString();
-        Debug.Log(weapon);
         SceneNavigator.Instance.Change(m_currentScene.ToString(), 1.5f);
 
     }
@@ -99,24 +96,24 @@ public class Scene : MonoBehaviour {
     /// <summary>
     /// 次のステージ選択
     /// </summary>
-    public void NextStage()
-    {
-        if(Input.GetButtonDown("Right"))
-        {
-            Debug.Log("right");
-        }
-    }
+    //public void NextStage()
+    //{
+    //    if(Input.GetButtonDown("Right"))
+    //    {
+    //        Debug.Log("right");
+    //    }
+    //}
 
     /// <summary>
     /// 前のステージ選択
     /// </summary>
-    public void BeforeStage()
-    {
-        if (Input.GetButtonDown("Left"))
-        {
-            Debug.Log("reft");
-        }
-    }
+    //public void BeforeStage()
+    //{
+    //    if (Input.GetButtonDown("Left"))
+    //    {
+    //        Debug.Log("reft");
+    //    }
+    //}
 
 
 }
