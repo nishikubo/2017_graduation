@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *  魔法
+ *  magicにアタッチ
+ */
 public class Magic : AttackBase
 {
     [Header("Stateの管理")]

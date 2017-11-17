@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *　弾
+ *　bulletにアタッチ
+ */ 
 public class Bullet : AttackBase {
 
     [SerializeField, Header("弾速")]

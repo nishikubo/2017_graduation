@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *　攻撃の基礎
+ */
+
 public class AttackBase : MonoBehaviour {
 
     [SerializeField, Header("与ダメージ")]

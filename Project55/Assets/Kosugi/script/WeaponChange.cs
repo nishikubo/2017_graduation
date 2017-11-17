@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ *  武器切り替え
+ *  Playerにアタッチ
+ */
+
 public class WeaponChange : MonoBehaviour {
 
     [SerializeField, Header("武器切り替えモードかどうか")]

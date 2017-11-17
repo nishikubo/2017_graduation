@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *　斬撃
+ *　slashにアタッチ
+ */
+
 public class Slash : AttackBase {
 
     [Header("Stateの管理")]

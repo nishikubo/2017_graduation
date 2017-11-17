@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ *　プレイヤー
+ *　Playerにアタッチ
+ */
+
 /// <summary>
 /// Rayの当たり判定用
 /// </summary>
@@ -31,7 +36,9 @@ public class Player : MonoBehaviour
     private float mGravity = 9.8f;
     [SerializeField, Header("床と接しているか")]
     private bool mColFloor = false;
-
+    [SerializeField, Header("2段ジャンプできるかどうか")]
+    private bool mDoubleJump = false;
+    
     [SerializeField, Header("装備中の武器")]
     private WeaponsList mNewWeapon;
     [SerializeField, Header("1つ前の武器")]
@@ -72,6 +79,16 @@ public class Player : MonoBehaviour
 
         Active(mNewWeapon);
         PlayerStatus();
+
+        //上下のカメラ制御(仮)
+        if (transform.position.y > 0)
+        {
+            GameObject.Find("Floor").GetComponent<StageRect>().SetHeight(12);
+        }
+        else if (transform.position.y <= 0)
+        {
+            GameObject.Find("Floor").GetComponent<StageRect>().SetHeight(11);
+        }
     }
 
     /// <summary>
@@ -102,6 +119,13 @@ public class Player : MonoBehaviour
         if (mColFloor && Input.GetKeyDown(KeyCode.Space))
         {
             GetComponent<Rigidbody2D>().AddForce(Vector2.up * mJumpPower * 100);
+            mDoubleJump = true;
+        }
+        else if (mDoubleJump && Input.GetKeyDown(KeyCode.Space))
+        {
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            GetComponent<Rigidbody2D>().AddForce(Vector2.up * mJumpPower * 100);
+            mDoubleJump = false;
         }
 
         if (!mColFloor)

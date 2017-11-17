@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *　武器の基礎 
+ */
 public class WeaponBase : MonoBehaviour
 {
 
