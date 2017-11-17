@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //前方範囲？プレイヤー中心範囲？前後範囲？　要検討
+
+/*
+ *　杖
+ *　Playerにアタッチ
+ */
+
 public class Cane : WeaponBase
 {
     [SerializeField, Header("詠唱時間")]
