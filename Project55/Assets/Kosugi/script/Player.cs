@@ -228,5 +228,6 @@ public class Player : MonoBehaviour
         {
             mColFloor = false;
         }
+    
     }
 }

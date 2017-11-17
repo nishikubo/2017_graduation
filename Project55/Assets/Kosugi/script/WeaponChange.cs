@@ -42,7 +42,7 @@ public class WeaponChange : MonoBehaviour {
     /// </summary>
     void Mode()
     {
-        if (mStateManager.GetState() != States.Normal) return;
+        if (mStateManager.GetState() != States.Normal&& mStateManager.GetState() != States.Weapon) return;
 
         if (Input.GetKeyDown(KeyCode.U))
         {

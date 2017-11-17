@@ -34,9 +34,6 @@ public class CameraController : MonoBehaviour
     [Header("ボス突入フラグ")]
     public bool mBoss;
 
-    [Header("Stateの管理")]
-    private StateManager mStateManager;
-
     /// <summary>
     /// カメラの表示領域を緑ラインで表示
     /// </summary>
@@ -51,9 +48,6 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        //取得
-        mStateManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<StateManager>();
-
         //プレイヤーキャラを取得
         mPlayer = GameObject.FindGameObjectWithTag("Player");
         mOffset = transform.position - mPlayer.transform.position;
