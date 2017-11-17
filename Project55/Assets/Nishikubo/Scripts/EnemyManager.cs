@@ -5,28 +5,53 @@ using UnityEngine;
 /// <summary>
 /// 敵管理クラス
 /// </summary>
-public class EnemyManager : MonoBehaviour {
+public class EnemyManager : Scene {
 
-    [SerializeField]
-    private GameObject[] m_enemyList;
-
-    //private EnemyStatus m_enemyStatus;
+    [SerializeField, Tooltip("ステージ内の敵設定")]
+    private List<GameObject> m_enemyList;
 
     //ダメージの管理、死亡処理
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
+    /// <summary>
+    /// ダメージを与える
+    /// </summary>
+    /// <param name="damage">自身の攻撃力</param>
+    /// <param name="target">ダメージを減らす相手</param>
     public void EnemyDamage(int damage,GameObject target)
     {
         target.GetComponent<EnemyStatus>().Damage(damage);
         Debug.Log("敵：ぐはっ…");
+    }
+
+    /// <summary>
+    /// 雑魚敵死亡時
+    /// </summary>
+    /// <param name="obj">自身</param>
+    public void EnemyDead(GameObject obj)
+    {
+        //敵死亡時リストから削除
+        m_enemyList.Remove(obj);
+        Destroy(obj);
+    }
+
+    /// <summary>
+    /// ゲームクリア時
+    /// </summary>
+    /// <param name="boss"></param>
+    public void GameClear(GameObject boss)
+    {
+        m_enemyList.Remove(boss);
+        Destroy(boss);
+        //リザルトへ
+        OnNext();
     }
 }

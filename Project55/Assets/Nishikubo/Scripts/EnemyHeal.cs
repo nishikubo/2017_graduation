@@ -7,25 +7,10 @@ using UnityEngine;
 /// </summary>
 public class EnemyHeal : Enemy {
 
-    //protected override void IdleState()
-    //{
-    //    base.IdleState();
-    //}
-
-    //protected override void WalkState(bool flip)
-    //{
-
-    //}
-
-    //protected override void AttackState()
-    //{
-    //    base.AttackState();
-    //}
-
     protected override void DeadState()
     {
         m_status.Dead();
-        Destroy(this.gameObject);
+        m_enemyManager.EnemyDead(this.gameObject);
         HealDrop();
     }
 
