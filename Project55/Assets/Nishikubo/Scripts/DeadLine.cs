@@ -20,8 +20,7 @@ public class DeadLine : MonoBehaviour {
     {
         if (col.gameObject.tag == "Enemy")
         {
-            Debug.Log("otita");
-            //m_enemyManager.GameClear();
+            m_enemyManager.EnemyDead(col.gameObject);
         }
     }
 

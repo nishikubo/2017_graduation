@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// シーン全体
@@ -44,6 +45,8 @@ public class Scene : MonoBehaviour {
     private WeaponsList m_weapon = WeaponsList.None;
     public static WeaponsList m_weaponCheck;  //保持
 
+    //private Text m_clear;
+
 
     // Update is called once per frame
     //void Update()
@@ -71,6 +74,21 @@ public class Scene : MonoBehaviour {
     {
         Application.Quit();
     }
+
+    /// <summary>
+    /// ステージクリア後
+    /// </summary>
+    public void OnClear()
+    {
+        Animator m_clear = GameObject.Find("Clear").GetComponent<Animator>();
+        m_clear.enabled = true;
+
+        if (m_clear.GetCurrentAnimatorStateInfo(0).normalizedTime<1.0f)
+        {
+            SceneNavigator.Instance.Change(m_currentScene.ToString(), 1.5f);
+        }
+    }
+
 
     /// <summary>
     /// 武器選択
