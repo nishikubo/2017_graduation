@@ -53,29 +53,50 @@ public class EnemyBoss : MonoBehaviour
     /*攻撃時用*/
     protected float m_attackTime = 0.0f;//攻撃時のタイム
 
+    //protected GameObject prefab;//プレハブ読み込み用
+    //protected GameObject prefab1;
+    //protected GameObject prefab2;
 
+    protected GameObject[] prefabs = new GameObject[3];
+
+    protected int r = 0;    //攻撃のランダム用変数
+
+    //public bool m_attack = false;
+
+
+    protected GameObject m_bossHP;
+    public bool bossFlag = false;
 
     protected void Awake()
     {
         DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+
+        LoadResources();
     }
 
     // Use this for initialization
     protected void Start()
     {
+        m_bossHP = GameObject.Find("BossHP");
+        m_bossHP.SetActive(false);//初期は非表示
 
-        m_state = BossState.IDLE;
         m_status = this.GetComponent<EnemyStatus>();
-        //m_flip = this.GetComponent<SpriteRenderer>().flipX;
-
         m_player = GameObject.FindGameObjectWithTag("Player");
         m_enemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
+
+        m_state = BossState.IDLE;
 
     }
 
     // Update is called once per frame
     protected void Update()
     {
+        if(bossFlag==true)
+        {
+            m_bossHP.SetActive(true);//ボス面に入ったら表示
+        }
+
+
         //状態遷移
         switch (m_state)
         {
@@ -93,9 +114,6 @@ public class EnemyBoss : MonoBehaviour
             m_state = BossState.DEAD;
         }
 
-
-
-        
     }
 
     /// <summary>
@@ -103,8 +121,7 @@ public class EnemyBoss : MonoBehaviour
     /// </summary>
     protected virtual void IdleState()
     {
-        //そのうち
-        //カメラに入ったら動き出すとかに変えたい
+        r = Random.Range(0, 3);
         m_state = BossState.ATTACK;
     }
 
@@ -113,9 +130,16 @@ public class EnemyBoss : MonoBehaviour
     /// </summary>
     protected void AttackState()
     {
-        AttackFire();
 
-
+        switch (r)
+        {
+            case 0: AttackFire(); break;
+            case 1: PlayerTracking(); break;
+            case 2: SetMagicPillar(); break;
+            /*case 3: Debug.Log("何もしない"); break;*/
+            /*case 4: Debug.Log("何もしない"); break;*/
+            default: break;
+        }
     }
 
 
@@ -132,28 +156,58 @@ public class EnemyBoss : MonoBehaviour
     }
 
 
+    //炎出す
     public void AttackFire()
     {
-        GameObject prefab = (GameObject)Resources.Load("Prefabs/Fire");
-
         //数秒ごとに攻撃
         m_attackTime += Time.deltaTime;
-        if (m_attackTime > 3.0f)
+        if (m_attackTime > 5.0f)
         {
-            //m_player.GetComponent<Player>().PlayerDamage(m_status.Attack());
-
-            // プレハブからインスタンスを生成
-            GameObject fire = Instantiate(prefab);
-            //fire.transform.position = new Vector3(transform.position.x+5, fire.transform.position.y, 0);
-            fire.transform.SetParent(transform, false);
-
-            fire.transform.DOMoveX(m_player.transform.position.x, 2.0f);
-
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject fire = Instantiate(prefabs[1]);
+                fire.transform.SetParent(transform, false);
+                fire.transform.DOMove(Random.insideUnitCircle * 3, 2.0f);
+            }
 
             m_attackTime = 0;
+            m_state = BossState.IDLE;
         }
-
     }
+
+    //プレイヤー追尾する
+    public void PlayerTracking()
+    {
+        //数秒ごとに攻撃
+        m_attackTime += Time.deltaTime;
+        if (m_attackTime > 5.0f)
+        {
+            // プレハブからインスタンスを生成
+            GameObject fire = Instantiate(prefabs[0]);
+            fire.transform.SetParent(transform, false);
+            fire.transform.DOMove(new Vector3(m_player.transform.position.x, m_player.transform.position.y), 2.0f);
+            
+            m_attackTime = 0;
+            m_state = BossState.IDLE;
+        }
+    }
+
+    //魔法陣設置後火柱
+    public void SetMagicPillar()
+    {
+        //数秒ごとに攻撃
+        m_attackTime += Time.deltaTime;
+        if (m_attackTime > 5.0f)
+        {
+            GameObject fire = Instantiate(prefabs[2]);
+            fire.transform.SetParent(transform, false);
+            fire.transform.position = new Vector3(m_player.transform.position.x, fire.transform.position.y, 0);
+
+            m_attackTime = 0;
+            m_state = BossState.IDLE;
+        }
+    }
+
 
     protected void OnCollisionEnter2D(Collision2D col)
     {
@@ -162,16 +216,17 @@ public class EnemyBoss : MonoBehaviour
             //Debug.Log("敵：えいっ！");
             m_player.GetComponent<Player>().PlayerDamage(m_status.Attack());
 
-            //m_state = BossState.ATTACK;
         }
     }
 
-    protected void OnCollisionExit2D(Collision2D col)
+
+    //リソース読み込み
+    public void LoadResources()
     {
-        //if (col.gameObject.tag == "Player")
-        //{
-        //    m_state = BossState.IDLE;
-        //}
+        prefabs[0] = (GameObject)Resources.Load("Prefabs/Fire");
+        prefabs[1] = (GameObject)Resources.Load("Prefabs/FireRand");
+        prefabs[2] = (GameObject)Resources.Load("Prefabs/PillarOfFire");
+
     }
 
 }

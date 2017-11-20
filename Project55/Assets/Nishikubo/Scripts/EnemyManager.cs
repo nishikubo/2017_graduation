@@ -26,8 +26,20 @@ public class EnemyManager : Scene {
     /// </summary>
     /// <param name="damage">自身の攻撃力</param>
     /// <param name="target">ダメージを減らす相手</param>
-    public void EnemyDamage(int damage,GameObject target)
+    public void EnemyDamage(int damage,GameObject target /*,int num*/)
     {
+        ////属性ごとに判定
+        //switch (num)
+        //{
+        //    case 0: target.GetComponent<EnemyStatus>().Damage(damage); break;
+        //    case 1:
+        //        if () { target.GetComponent<EnemyStatus>().Damage(damage); }
+        //         break;
+        //    default: break;
+        //}
+        //ターゲット（敵）にもintをせっていしておく
+        //それと同じ？だったら弱点 swixh必要ないか
+
         target.GetComponent<EnemyStatus>().Damage(damage);
         Debug.Log("敵：ぐはっ…");
     }
@@ -52,6 +64,7 @@ public class EnemyManager : Scene {
         m_enemyList.Remove(boss);
         Destroy(boss);
         //リザルトへ
-        OnNext();
+        //OnNext();
+        OnClear();
     }
 }
