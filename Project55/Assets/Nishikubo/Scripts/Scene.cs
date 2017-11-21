@@ -45,8 +45,6 @@ public class Scene : MonoBehaviour {
     private WeaponsList m_weapon = WeaponsList.None;
     public static WeaponsList m_weaponCheck;  //保持
 
-    //private Text m_clear;
-
 
     // Update is called once per frame
     //void Update()
