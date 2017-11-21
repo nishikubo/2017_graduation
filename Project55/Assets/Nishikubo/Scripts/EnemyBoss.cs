@@ -83,8 +83,8 @@ public class EnemyBoss : MonoBehaviour
         m_status = this.GetComponent<EnemyStatus>();
         m_player = GameObject.FindGameObjectWithTag("Player");
         m_enemyManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EnemyManager>();
-
         m_state = BossState.IDLE;
+
 
     }
 
