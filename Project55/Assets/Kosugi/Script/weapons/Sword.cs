@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sword : WeaponBase {
-
+public class Sword : WeaponBase
+{
     void Start()
     {
 
