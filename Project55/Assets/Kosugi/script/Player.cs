@@ -34,11 +34,15 @@ public class Player : MonoBehaviour
     private float mJumpPower = 4.0f;
     [Header("重力")]
     private float mGravity = 9.8f;
-    [SerializeField, Header("床と接しているか")]
+    [SerializeField, Header("床と接触しているか")]
     private bool mColFloor = false;
-    [SerializeField, Header("2段ジャンプできるかどうか")]
-    private bool mDoubleJump = false;
-    
+    [SerializeField, Header("ジャンプしているか")]
+    private bool mIsJump = false;
+    [SerializeField, Header("ジャンプの回数")]
+    private int mJumpCount = 0;
+    [SerializeField, Header("ジャンプの最大回数")]
+    private int mJumpMax = 2;
+
     [SerializeField, Header("装備中の武器")]
     private WeaponsList mNewWeapon;
     [SerializeField, Header("1つ前の武器")]
@@ -81,14 +85,19 @@ public class Player : MonoBehaviour
         PlayerStatus();
 
         //上下のカメラ制御(仮)
-        if (transform.position.y > 0)
-        {
-            GameObject.Find("Floor").GetComponent<StageRect>().SetHeight(12);
-        }
-        else if (transform.position.y <= 0)
-        {
-            GameObject.Find("Floor").GetComponent<StageRect>().SetHeight(11);
-        }
+        //if (transform.position.y > 1)
+        //{
+        //    GameObject.Find("Floor").GetComponent<StageRect>().SetHeight(12);
+        //}
+        //else if (transform.position.y <= 1)
+        //{
+        //    GameObject.Find("Floor").GetComponent<StageRect>().SetHeight(11);
+        //}
+    }
+    private void FixedUpdate()
+    {
+        FixedMove();
+        FixedJump();
     }
 
     /// <summary>
@@ -99,8 +108,7 @@ public class Player : MonoBehaviour
         if (mStateManager.GetState() != States.Normal) return;
 
         mInputVec = new Vector3(Input.GetAxis("Horizontal") * mSpeed, 0);
-        transform.position += mInputVec * Time.deltaTime;
-
+  
         if (mInputVec.x > 0)
         {
             gameObject.transform.localScale = new Vector3(1, 1, 1);
@@ -110,22 +118,40 @@ public class Player : MonoBehaviour
             gameObject.transform.localScale = new Vector3(-1, 1, 1);
         }
     }
+    void FixedMove()
+    {
+        //FixedUpdate用
+        transform.position += mInputVec * Time.deltaTime;
+    }
 
     /// <summary>
     /// ジャンプ処理
     /// </summary>
     void Jump()
     {
-        if (mColFloor && Input.GetKeyDown(KeyCode.Space))
+        if (mJumpCount >= mJumpMax) return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            GetComponent<Rigidbody2D>().AddForce(Vector2.up * mJumpPower * 100);
-            mDoubleJump = true;
+            mIsJump = true;
+
+            //if (GetComponent<Rigidbody2D>().velocity == Vector2.zero)
+            //{
+            //    mJumpCount++;
+            //}
         }
-        else if (mDoubleJump && Input.GetKeyDown(KeyCode.Space))
+    }
+    void FixedJump()
+    {
+        //FixedUpdate用
+        if (mIsJump)
         {
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             GetComponent<Rigidbody2D>().AddForce(Vector2.up * mJumpPower * 100);
-            mDoubleJump = false;
+
+            mJumpCount++;
+
+            mIsJump = false;
         }
 
         if (!mColFloor)
@@ -205,10 +231,24 @@ public class Player : MonoBehaviour
             mWeaponResource[i].GetComponent<ActiveSelect>().Active(mBeforeWeapon.ToString(), mNewWeapon.ToString());
         }
     }
+    
+    /// <summary>
+    /// 床との当たり判定をセット
+    /// </summary>
+    /// <param name="flag"></param>
+    public void SetJumpFlag(bool flag)
+    {
+        mColFloor = flag;
 
-
+        //床と接触している かつ ジャンプ関連の力が働いていない場合
+        if (mColFloor && GetComponent<Rigidbody2D>().velocity == Vector2.zero)
+        {
+            mJumpCount = 0;
+        }
+    }
+            
     /*----当たり判定関連----*/
-    private void OnCollisionEnter2D(Collision2D col)
+            private void OnCollisionEnter2D(Collision2D col)
     {
         //if (col.gameObject.tag == "Enemy")
         //{
@@ -217,17 +257,16 @@ public class Player : MonoBehaviour
     }
     private void OnCollisionStay2D(Collision2D col)
     {
-        if(col.gameObject.tag=="Floor")
-        {
-            mColFloor = true;
-        }
+        //if(col.gameObject.tag=="Floor")
+        //{
+        //    mColFloor = true;
+        //}
     }
     private void OnCollisionExit2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Floor")
-        {
-            mColFloor = false;
-        }
-    
+        //if (col.gameObject.tag == "Floor")
+        //{
+        //    mColFloor = false;
+        //}
     }
 }

@@ -52,12 +52,12 @@ public class CameraController : MonoBehaviour
         mPlayer = GameObject.FindGameObjectWithTag("Player");
         mOffset = transform.position - mPlayer.transform.position;
         //StageRectを取得
-        mStageRect = GameObject.Find("Floor").GetComponent<StageRect>();
+        mStageRect = GameObject.Find("FloorBase").GetComponent<StageRect>();
     }
 
     
 
-    void LateUpdate()
+    void Update()
     {
         if (!mBoss)
             NormaCamera();
@@ -100,5 +100,14 @@ public class CameraController : MonoBehaviour
         mCameraBottomR = new Vector3(mCameraTopR.x, mCameraBottomL.y, mCameraTopR.z);
         mCameraWidth = Vector3.Distance(mCameraBottomL, mCameraBottomR);
         mCameraHeight = Vector3.Distance(mCameraBottomL, mCameraTopL);
+    }
+
+    public float GetCameraWidthSize()
+    {
+        return mCameraWidth;
+    }
+    public float GetCameraHeightSize()
+    {
+        return mCameraHeight;
     }
 }

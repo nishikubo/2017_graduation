@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BossEnter : MonoBehaviour
 {
-	void Start ()
+    [Header("プレイヤー侵入判定用")]
+    private bool mPlayerEnter;
+
+    void Start ()
 	{
 		
 	}
@@ -18,10 +21,8 @@ public class BossEnter : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
-            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().mBoss
-                = !GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().mBoss;
+            transform.parent.GetComponent<BossAreaManager>().SetEnter(true);
             Destroy(gameObject);
-            print("enter");
         }
     }
 }
